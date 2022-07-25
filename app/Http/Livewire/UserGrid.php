@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\User;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Rules\{Rule, RuleActions};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
@@ -81,7 +82,11 @@ final class UserGrid extends PowerGridComponent
     */
     public function addColumns(): PowerGridEloquent
     {
-        return PowerGrid::eloquent();
+        return PowerGrid::eloquent()
+            ->addColumn('id')
+            ->addColumn('name')
+            ->addColumn('created_at')
+            ->addColumn('created_at_formatted', fn (User $model) => Carbon::parse($model->created_at)->format('d/m/Y H:i:s'));
     }
 
     /*
@@ -101,8 +106,22 @@ final class UserGrid extends PowerGridComponent
     public function columns(): array
     {
         return [
-        ]
-;
+            Column::make('ID', 'id')
+                ->searchable()
+                ->sortable(),
+
+            Column::make('Name', 'name')
+                ->searchable()
+                ->makeInputText('name')
+                ->sortable(),
+
+            Column::make('Created at', 'created_at')
+                ->hidden(),
+
+            Column::make('Created at', 'created_at_formatted', 'created_at')
+                ->makeInputDatePicker()
+                ->searchable()
+        ];
     }
 
     /*
