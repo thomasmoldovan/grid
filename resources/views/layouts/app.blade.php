@@ -14,7 +14,7 @@
         @livewireStyles
         @powerGridStyles
 
-        {{-- <link rel="stylesheet" href="@/resources/css/tailwind.min.css"> --}}
+        <link rel="stylesheet" href="@/resources/css/tailwind.min.css">
 
         @vite([
             'resources/css/app.css', 
@@ -25,7 +25,7 @@
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
 
-            @include('admin.index')
+            {{-- @include('admin.index') --}}
             {{-- @include('layouts.navigation') --}}
             {{-- @include('layouts.sidebar') --}}
 
@@ -35,9 +35,9 @@
             {{-- {{ $powergrid }} --}}
 
             <!-- Page Content -->
-            <main>
+            {{-- <main>
                 {{ $slot }}
-            </main>
+            </main> --}}
         </div>
 
         <!-- Scripts -->
