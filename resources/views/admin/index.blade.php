@@ -27,11 +27,14 @@
     <link href="/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
     <link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
     <link href="/assets/vendor/simple-datatables/style.css" rel="stylesheet">
+    <link href="/assets/js/toastr/toastr.css" rel="stylesheet">
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" rel="stylesheet">
     {{-- <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script> --}}
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="/assets/js/toastr/toastr.js"></script>
+    <script src="/assets/js/common.js"></script>
 
     <!-- Template Main CSS File -->
     <link href="/assets/css/style.css" rel="stylesheet">
@@ -42,6 +45,17 @@
 </head>
 
 <body>
+
+    @if(Session::has("toaster_message"))
+    {{-- {{ Session::forget("toaster_message") }} --}}
+    <script>
+        showToast('{{ Session::get("toaster_status") }}', 
+                  '{{ ucwords(Session::get("toaster_title")) }}', 
+                  '{{ Session::get("toaster_message") }}',
+                  true)
+    </script>
+    {{ Session::forget("toaster_message") }}
+    @endif
 
     <!-- ======= Header ======= -->
     @include('admin.main.top-bar-navigation')
