@@ -46,9 +46,6 @@ class CategoryController extends Controller
         if (is_null($request->parent)) {
             $category->parent_id = $category->id;
             $category->save();            
-            return redirect()->route('categories.all')->with('success', 'Category added successfully');
-        } else {
-            return redirect()->route('categories.all')->with('success', 'Subcategory added successfully');
         }
 
         $toaster_message = [
@@ -57,7 +54,7 @@ class CategoryController extends Controller
             "toaster_message" => "Category successfully saved"
         ];
 
-        return redirect()->back()->with($toaster_message);
+        return redirect()->route("categories.all")->with($toaster_message);
     }
 
     public function edit($id = null) {
@@ -112,13 +109,22 @@ class CategoryController extends Controller
     public function delete($id = null) {
         if (!is_numeric($id)) return;
 
-        Category::find($id)->delete();
 
-        $toaster_message = [
-            "toaster_status" => "success",
-            "toaster_title" => "Success",
-            "toaster_message" => "Category deleted"
-        ];
+        $count = Category::find($id)->children()->get()->count();
+        if ($count > 0) {
+            $toaster_message = [
+                "toaster_status" => "info",
+                "toaster_title" => "Not allowed",
+                "toaster_message" => "This category has subcategories. Delete them first"
+            ];
+        } else {
+            Category::find($id)->delete();
+            $toaster_message = [
+                "toaster_status" => "success",
+                "toaster_title" => "Success",
+                "toaster_message" => "Category deleted"
+            ];
+        }
 
         return redirect()->route("categories.all")->with($toaster_message);
     }

@@ -64,12 +64,12 @@
                                                 <td>{{ $category->parent->category_name }}</td>
                                                 <td>{{ Carbon\Carbon::parse($category->created_at) }}</td>
                                                 <td class="text-end">
-                                                    <a href="{{ url('category/edit/' . $category->id) }}"
+                                                    <a href="{{ route('categories.edit', $category->id) }}"
                                                         class="btn btn-info btn-sm" data-bs-toggle="tooltip"
                                                         data-bs-placement="top" title="Edit">
                                                         <i class="ri-edit-2-fill"></i>
                                                     </a>
-                                                    <a href="{{ url('category/delete/' . $category->id) }}"
+                                                    <a href="{{ route('categories.delete', $category->id) }}"
                                                         class="btn btn-warning btn-sm" data-bs-toggle="tooltip"
                                                         data-bs-placement="top" title="Disable">
                                                         <i class="ri-delete-bin-6-fill"></i>

@@ -21,7 +21,7 @@
                         <div class="card-title">
                             Edit category
                         </div>
-                        <form action="{{ url('category/update/' . $current_category->id) }}" method="POST">
+                        <form action="{{ route('categories.update', $current_category->id) }}" method="POST">
                             @csrf
 
                             <div class="col-md-12">

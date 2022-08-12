@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,16 +19,24 @@ Route::get('/', function () {
     return view('home');
 });
 
-Route::get('/category/all', [CategoryController::class, 'all'])->name('categories.all');
-Route::post('/category/add', [CategoryController::class, 'add'])->name('categories.add');
-Route::get('/category/edit/{id}', [CategoryController::class, 'edit'])->name('categories.edit');
-Route::post('/category/update/{id}', [CategoryController::class, 'update']);
-Route::get('/category/delete/{id}', [CategoryController::class, 'delete']);
-Route::get('/category/restore/{id}', [CategoryController::class, 'restore']);
-Route::get('/category/remove/{id}', [CategoryController::class, 'remove']);
+Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+    Route::get('/category/all', [CategoryController::class, 'all'])->name('categories.all');
+    Route::post('/category/add', [CategoryController::class, 'add'])->name('categories.add');
+    Route::get('/category/edit/{id}', [CategoryController::class, 'edit'])->name('categories.edit');
+    Route::post('/category/update/{id}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::get('/category/delete/{id}', [CategoryController::class, 'delete'])->name('categories.delete');
+    Route::get('/category/restore/{id}', [CategoryController::class, 'restore']);
+    Route::get('/category/remove/{id}', [CategoryController::class, 'remove']);
 
-require __DIR__.'/auth.php';
+    Route::get('/store/all', [StoreController::class, 'all'])->name('stores.all');
+    Route::post('/store/add', [StoreController::class, 'add'])->name('stores.add');
+    Route::get('/store/edit/{id}', [StoreController::class, 'edit'])->name('stores.edit');
+    Route::post('/store/update/{id}', [StoreController::class, 'update']);
+    Route::get('/store/delete/{id}', [StoreController::class, 'delete']);
+    Route::get('/store/restore/{id}', [StoreController::class, 'restore']);
+    Route::get('/store/remove/{id}', [StoreController::class, 'remove']);
+});
+
+require __DIR__ . '/auth.php';

@@ -24,28 +24,28 @@ $(document).ready(function () {
     // Create product page
     var today = new Date();
     var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-    $(".startdate").datetimepicker({
-        autoclose: true,
-        minuteStep: 15,
-        todayHighlight: true,
-        forceParce: true,
-        startDate: date,
-        format: 'yyyy/mm/dd',
-        startView: 2,
-        minView: 2,
-        viewSelect: 2
-    });
-    $(".enddate").datetimepicker({
-        autoclose: true,
-        minuteStep: 15,
-        todayHighlight: true,
-        forceParce: true,
-        startDate: date,
-        format: 'yyyy/mm/dd',
-        startView: 2,
-        minView: 2,
-        viewSelect: 2
-    });
+    // $(".startdate").datetimepicker({
+    //     autoclose: true,
+    //     minuteStep: 15,
+    //     todayHighlight: true,
+    //     forceParce: true,
+    //     startDate: date,
+    //     format: 'yyyy/mm/dd',
+    //     startView: 2,
+    //     minView: 2,
+    //     viewSelect: 2
+    // });
+    // $(".enddate").datetimepicker({
+    //     autoclose: true,
+    //     minuteStep: 15,
+    //     todayHighlight: true,
+    //     forceParce: true,
+    //     startDate: date,
+    //     format: 'yyyy/mm/dd',
+    //     startView: 2,
+    //     minView: 2,
+    //     viewSelect: 2
+    // });
 
     $(".add-to-wishlist").click(function(e) {
         e.preventDefault();
