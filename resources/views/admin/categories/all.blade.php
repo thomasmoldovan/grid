@@ -141,7 +141,7 @@
                                 </div>
 
                                 <div class="text-end pt-3">
-                                    <button type="submit" id="add_category"
+                                    <button type="submit" id="add_category" value="Add"
                                         class="btn btn-primary btn-outline justify-content-md-end">Add</button>
                                 </div>
                             </form>
