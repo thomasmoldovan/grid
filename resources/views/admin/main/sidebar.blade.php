@@ -7,8 +7,7 @@
                 <i class="bi bi-grid"></i>
                 <span>Dashboard</span>
             </a>
-        </li><!-- End Dashboard Nav -->
-
+        </li>
         <li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-menu-button-wide"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -25,12 +24,12 @@
                     </a>
                 </li>
                 <li>
-                    <a href="components-badges.html">
+                    <a href="{{ route('locations.all') }}">
                         <i class="bi bi-circle"></i><span>Locations</span>
                     </a>
                 </li>
             </ul>
-        </li><!-- End Components Nav -->
+        </li>
 
         <li class="nav-heading">Pages</li>
 
@@ -39,8 +38,8 @@
                 <i class="bi bi-file-earmark"></i>
                 <span>Blank</span>
             </a>
-        </li><!-- End Blank Page Nav -->
+        </li>
 
     </ul>
 
-</aside><!-- End Sidebar-->
+</aside>

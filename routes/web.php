@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LocationController;
 use App\Http\Controllers\StoreController;
 use Illuminate\Support\Facades\Route;
 
@@ -43,7 +44,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
     Route::post('/locations/add', [LocationController::class, 'add'])->name('locations.add');
     Route::get('/locations/edit/{id}', [LocationController::class, 'edit'])->name('locations.edit');
     Route::post('/locations/update/{id}', [LocationController::class, 'update']);
-    Route::get('/locations/delete/{id}', [LocationController::class, 'delete']);
+    Route::get('/locations/delete/{id}', [LocationController::class, 'delete'])->name('locations.delete');
     Route::get('/locations/restore/{id}', [LocationController::class, 'restore']);
     Route::get('/locations/remove/{id}', [LocationController::class, 'remove']);
 });
