@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\LocationController;
-use App\Http\Controllers\StoreController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\LocationController;
+use App\Http\Controllers\Admin\StoreController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -35,8 +35,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
     Route::get('/store/all', [StoreController::class, 'all'])->name('stores.all');
     Route::post('/store/add', [StoreController::class, 'add'])->name('stores.add');
     Route::get('/store/edit/{id}', [StoreController::class, 'edit'])->name('stores.edit');
-    Route::post('/store/update/{id}', [StoreController::class, 'update']);
-    Route::get('/store/delete/{id}', [StoreController::class, 'delete']);
+    Route::post('/store/update/{id}', [StoreController::class, 'update'])->name('stores.update');
+    Route::delete('/store/delete/{id}', [StoreController::class, 'delete'])->name('stores.delete');
     Route::get('/store/restore/{id}', [StoreController::class, 'restore']);
     Route::get('/store/remove/{id}', [StoreController::class, 'remove']);
 
@@ -44,7 +44,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
     Route::post('/locations/add', [LocationController::class, 'add'])->name('locations.add');
     Route::get('/locations/edit/{id}', [LocationController::class, 'edit'])->name('locations.edit');
     Route::post('/locations/update/{id}', [LocationController::class, 'update']);
-    Route::get('/locations/delete/{id}', [LocationController::class, 'delete'])->name('locations.delete');
+    Route::delete('/locations/delete/{id}', [LocationController::class, 'delete'])->name('locations.delete');
     Route::get('/locations/restore/{id}', [LocationController::class, 'restore']);
     Route::get('/locations/remove/{id}', [LocationController::class, 'remove']);
 });

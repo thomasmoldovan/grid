@@ -17,9 +17,9 @@ class CategoryFactory extends Factory
 
         return [
             'parent_id' => $id + 1,
-            'category_icon' => 'bi bi-gem',
-            'category_color' => "#".substr(md5(rand()), 0, 6),
-            'category_name' => fake()->word(),
+            'icon' => 'bi bi-gem',
+            'color' => "#".substr(md5(rand()), 0, 6),
+            'name' => fake()->word(),
         ];
     }
 }

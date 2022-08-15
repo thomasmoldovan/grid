@@ -13,7 +13,8 @@ class LocationFactory extends Factory
     public function definition()
     {
         return [
-            'location_name' => fake()->name(),
+            'name' => fake()->name(),
+            'active' => 1,
         ];
     }
 }

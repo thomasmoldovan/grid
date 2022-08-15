@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Location;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -10,14 +11,14 @@ class LocationController extends Controller
 {
 
     protected $rules = [
-        "location_name" => "required|unique:locations|min:3|max:125"
+        "name" => "required|unique:location|min:3|max:125"
     ];
 
     protected $messages = [
-        "location_name.required" => "Please enter a location name",
-        "location_name.unique" => "This location name is already in use",
-        "location_name.min" => "The location name must be at least 3 characters long",
-        "location_name.max" => "The location name must be less than 125 characters long"
+        "name.required" => "Please enter a location name",
+        "name.unique" => "This location name is already in use",
+        "name.min" => "The location name must be at least 3 characters long",
+        "name.max" => "The location name must be less than 125 characters long"
     ];
 
     public function all()
@@ -42,7 +43,7 @@ class LocationController extends Controller
         }
 
         $location = new Location();
-        $location->location_name = $request->location_name;
+        $location->name = $request->name;
         $location->active = 1;
         $location->save();
 
@@ -50,6 +51,31 @@ class LocationController extends Controller
             "toaster_status" => "success",
             "toaster_title" => "Success",
             "toaster_message" => "Category successfully saved"
+        ];
+
+        return redirect()->back()->with($toaster_message);
+    }
+
+    public function delete(int $id) {
+
+        $location = Location::find($id);
+
+        if ($location->store()->count() > 0) {
+            $toaster_message = [
+                "toaster_status" => "error",
+                "toaster_title" => "Error",
+                "toaster_message" => "This location is currently in use and cannot be deleted"
+            ];
+
+            return redirect()->back()->with($toaster_message);
+        }
+
+        $location->delete();
+
+        $toaster_message = [
+            "toaster_status" => "success",
+            "toaster_title" => "Success",
+            "toaster_message" => "Location deleted"
         ];
 
         return redirect()->back()->with($toaster_message);

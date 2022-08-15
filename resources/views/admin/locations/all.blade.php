@@ -1,16 +1,15 @@
 @extends('admin.index')
 
 @section('main')    
-    <main id="main" class="main">
-        
+    <main id="main" class="main">        
         <div class="container-fluid">
             <div class="pagetitle">
                 <h1>Locations</h1>
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item">Stores</li>
-                        <li class="breadcrumb-item">Location</li>
+                        <li class="breadcrumb-item">Categories</li>
+                        <li class="breadcrumb-item">Locations</li>
                         <li class="breadcrumb-item active">Index</li>
                     </ol>
                 </nav>
@@ -28,25 +27,25 @@
                             <form method="POST" action="{{ route('locations.add') }}" enctype="multipart/form-data">
                                 @csrf
                                 <div class="col-md-12">
-                                    <label for="location_name" class="form-label">Name <b class="text-danger">*</b></label>
-                                    <input type="text" id="location_name" name="location_name" class="form-control"
-                                        placeholder="location name" aria-describedby="add_location_button">
-                                    @error('location_name')
+                                    <label for="name" class="form-label">Name <b class="text-danger">*</b></label>
+                                    <input type="text" id="name" name="name" class="form-control"
+                                        placeholder="location name" aria-describedby="add_button">
+                                    @error('name')
                                         <script>
-                                            $('#location_name').addClass('is-invalid');
+                                            $('#name').addClass('is-invalid');
                                         </script>
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                     @if (session('success'))
                                         <script>
-                                            $('#location_name').addClass('is-valid').change();
+                                            $('#name').addClass('is-valid').change();
                                         </script>
                                         <div class="valid-feedback">{{ session('success') }}</div>
                                     @endif
                                 </div>
         
                                 <div class="text-end pt-3">
-                                    <button type="submit" id="add_location_button" class="btn btn-primary btn-outline justify-content-md-end">Add</button>
+                                    <button type="submit" id="add_button" class="btn btn-primary btn-outline justify-content-md-end">Add</button>
                                 </div>
                             </form>
                         </div>

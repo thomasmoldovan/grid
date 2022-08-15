@@ -9,15 +9,17 @@ class Store extends Model
 {
     use HasFactory;
 
+    protected $table = 'store';
+
     protected $fillable = [
-        "category_id",
         "location_id",
-        "store_name",
-        "store_image",
-        "store_address",
-        "store_link",
+        // "category_id",
+        "name",
+        "image",
+        "address",
+        "link",
         "display",
-        "status_id"
+        "status"
     ];
 
     public function location()
@@ -25,8 +27,8 @@ class Store extends Model
         return $this->belongsTo(Location::class, "location_id");
     }
 
-    public function category()
-    {
-        return $this->belongsTo(Category::class, "category_id");
-    }
+    // public function category()
+    // {
+    //     return $this->belongsTo(Category::class, "category_id");
+    // }
 }

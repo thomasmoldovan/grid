@@ -13,6 +13,8 @@ final class LocationGrid extends PowerGridComponent
 {
     use ActionButton;
 
+    protected $name = null;
+
     /*
     |--------------------------------------------------------------------------
     |  Features Setup
@@ -22,8 +24,6 @@ final class LocationGrid extends PowerGridComponent
     */
     public function setUp(): array
     {
-        $this->showCheckBox();
-
         return [
             Exportable::make('export')
                 ->striped()
@@ -83,7 +83,7 @@ final class LocationGrid extends PowerGridComponent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')
-            ->addColumn('location_name')
+            ->addColumn('name')
             ->addColumn('active')
             ->addColumn('created_at_formatted', fn (Location $model) => Carbon::parse($model->created_at)->format('d/m/Y H:i:s'))
             ->addColumn('updated_at_formatted', fn (Location $model) => Carbon::parse($model->updated_at)->format('d/m/Y H:i:s'));
@@ -106,17 +106,24 @@ final class LocationGrid extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('ID', 'id'),
+            Column::make('ID', 'id')
+                ->sortable()
+                ->searchable(),
 
-            Column::make('LOCATION NAME', 'location_name')
-                ->editOnClick(true),
+            Column::make('LOCATION NAME', 'name')
+                ->sortable()
+                ->searchable()
+                ->editOnClick(false),
 
             Column::make('ACTIVE', 'active')
+                ->sortable()
                 ->toggleable(),
 
-            Column::make('CREATED AT', 'created_at_formatted', 'created_at'),
+            Column::make('CREATED AT', 'created_at_formatted', 'created_at')
+                ->sortable(),
 
-            Column::make('UPDATED AT', 'updated_at_formatted', 'updated_at'),
+            Column::make('UPDATED AT', 'updated_at_formatted', 'updated_at')
+                ->sortable(),
 
         ]
 ;
@@ -136,21 +143,20 @@ final class LocationGrid extends PowerGridComponent
      * @return array<int, Button>
      */
 
-    /*
     public function actions(): array
     {
        return [
-           Button::make('edit', 'Edit')
-               ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
-               ->route('location.edit', ['location' => 'id']),
+        //    Button::make('edit', 'Edit')
+        //        ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
+        //        ->route('location.edit', ['location' => 'id']),
 
-           Button::make('destroy', 'Delete')
-               ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-               ->route('location.destroy', ['location' => 'id'])
+            Button::make('delete', 'Delete')
+               ->class('btn btn-danger btn-sm w-100')
+               ->route('locations.delete', ['id' => 'id'])
+               ->target('_self')
                ->method('delete')
         ];
     }
-    */
 
     /*
     |--------------------------------------------------------------------------
@@ -178,4 +184,18 @@ final class LocationGrid extends PowerGridComponent
         ];
     }
     */
+
+    public function onUpdatedEditable(string $id, string $field, string $value): void
+    {
+        $location = Location::find($id);
+        $location->{$field} = $value;
+        $location->save();
+    }
+
+    public function onUpdatedToggleable(string $id, string $field, string $value): void
+    {
+        $location = Location::find($id);
+        $location->{$field} = $value;
+        $location->save();
+    }
 }

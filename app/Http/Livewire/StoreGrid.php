@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Store;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\Rules\{Rule, RuleActions};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridComponent, PowerGridEloquent};
@@ -22,8 +23,6 @@ final class StoreGrid extends PowerGridComponent
     */
     public function setUp(): array
     {
-        $this->showCheckBox();
-
         return [
             Exportable::make('export')
                 ->striped()
@@ -50,7 +49,12 @@ final class StoreGrid extends PowerGridComponent
     */
     public function datasource(): Builder
     {
-        return Store::query();
+        return Store::query()
+            ->join('location', 'location.id', '=', 'store.location_id')
+            // ->join('category', 'category.id', '=', 'store.category_id')
+            ->select('store.*', 'location.name as location_name', 
+            // 'category.name as category_name'
+        );
     }
 
     /*
@@ -83,15 +87,20 @@ final class StoreGrid extends PowerGridComponent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')
-            ->addColumn('store_name')
-            ->addColumn('store_image')
-            ->addColumn('store_address')
-            ->addColumn('store_link')
-            ->addColumn('display')
+            ->addColumn('image', function (Store $store) {
+                return '<img src="/' . $store->image . '" width="80" height="40">';
+            })
             ->addColumn('location_id')
-            ->addColumn('status_id')
-            ->addColumn('created_at_formatted', fn (Store $model) => Carbon::parse($model->created_at)->format('d/m/Y H:i:s'))
-            ->addColumn('updated_at_formatted', fn (Store $model) => Carbon::parse($model->updated_at)->format('d/m/Y H:i:s'));
+            // ->addColumn('category_id')
+            ->addColumn('name')
+            ->addColumn('address', function(Store $store) {
+                return Str::limit($store->address, 20, '...');
+            })
+            ->addColumn('link', function(Store $store) {
+                return '<a href="' . $store->link . '" target="_blank"><i class="fa fa-link text-success"></i></a>';
+            })
+            ->addColumn('display')
+            ->addColumn('status');
     }
 
     /*
@@ -112,49 +121,43 @@ final class StoreGrid extends PowerGridComponent
     {
         return [
             Column::make('ID', 'id')
-                ->makeInputRange(),
-
-            Column::make('STORE NAME', 'store_name')
                 ->sortable()
-                ->searchable()
-                ->makeInputText(),
+                ->searchable(),
 
-            Column::make('STORE IMAGE', 'store_image')
-                ->sortable()
-                ->searchable()
-                ->makeInputText(),
+            Column::make('IMAGE', 'image'),
 
-            Column::make('STORE ADDRESS', 'store_address')
+            Column::make('LOCATION ID', 'location_name')
                 ->sortable()
-                ->searchable()
-                ->makeInputText(),
+                ->searchable(),
 
-            Column::make('STORE LINK', 'store_link')
+            // Column::make('CATEGORY ID', 'category_name'),
+
+            Column::make('NAME', 'name')
                 ->sortable()
-                ->searchable()
-                ->makeInputText(),
+                ->searchable(),
+
+            Column::make('ADDRESS', 'address')
+                ->sortable()
+                ->searchable(),
+
+            Column::make('LINK', 'link')
+                ->headerAttribute('text-center')
+                ->bodyAttribute('text-center')
+                ->sortable()
+                ->searchable(),
 
             Column::make('DISPLAY', 'display')
+                ->headerAttribute('text-center')
+                ->bodyAttribute('text-center')
+                ->sortable()
                 ->toggleable(),
 
-            Column::make('LOCATION ID', 'location_id')
-                ->makeInputRange(),
-
-            Column::make('STATUS ID', 'status_id')
-                ->makeInputRange(),
-
-            Column::make('CREATED AT', 'created_at_formatted', 'created_at')
-                ->searchable()
+            Column::make('STATUS', 'status')
+                ->headerAttribute('text-center')
+                ->bodyAttribute('text-center')
                 ->sortable()
-                ->makeInputDatePicker(),
-
-            Column::make('UPDATED AT', 'updated_at_formatted', 'updated_at')
-                ->searchable()
-                ->sortable()
-                ->makeInputDatePicker(),
-
-        ]
-;
+                ->toggleable(),
+        ];
     }
 
     /*
@@ -171,21 +174,21 @@ final class StoreGrid extends PowerGridComponent
      * @return array<int, Button>
      */
 
-    /*
     public function actions(): array
     {
        return [
            Button::make('edit', 'Edit')
-               ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
-               ->route('store.edit', ['store' => 'id']),
+               ->class('btn btn-primary btn-sm w-100')
+               ->target('_self')
+               ->route('stores.edit', ['id' => 'id']),
 
            Button::make('destroy', 'Delete')
-               ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-               ->route('store.destroy', ['store' => 'id'])
+               ->class('btn btn-danger btn-sm w-100')
+               ->route('stores.delete', ['id' => 'id'])
+               ->target('_self')
                ->method('delete')
         ];
     }
-    */
 
     /*
     |--------------------------------------------------------------------------
@@ -213,4 +216,18 @@ final class StoreGrid extends PowerGridComponent
         ];
     }
     */
+
+    public function onUpdatedEditable(string $id, string $field, string $value): void
+    {
+        $store = Store::find($id);
+        $store->{$field} = $value;
+        $store->save();
+    }
+
+    public function onUpdatedToggleable(string $id, string $field, string $value): void
+    {
+        $store = Store::find($id);
+        $store->{$field} = $value;
+        $store->save();
+    }
 }
