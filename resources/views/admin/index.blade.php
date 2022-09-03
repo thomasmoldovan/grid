@@ -45,6 +45,9 @@
 </head>
 
 <body>
+    <!-- ======= Toaster ======= -->
+    <livewire:toaster-component/>
+
     <!-- ======= Header ======= -->
     @include('admin.main.top-bar-navigation')
 

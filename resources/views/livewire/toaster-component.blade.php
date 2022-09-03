@@ -1,11 +1,11 @@
 <div>
-    @if($message)
-        <script>
-            showToast(
-                "{{ $status }}",
-                "{{ $title }}", 
-                "{{ $message }}",
+    <script>
+        window.addEventListener('alert', e => {
+             showToast(
+                e.detail.status,
+                e.detail.title, 
+                e.detail.message,
                 true)
-        </script>
-    @endif
+        })
+    </script>
 </div>

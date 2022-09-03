@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Locations;
 
+use App\Http\Livewire\WithToaster;
 use App\Models\Location as LocationModel;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Support\Facades\Validator;
@@ -9,6 +10,7 @@ use Livewire\Component;
 
 class Location extends Component
 {
+    use WithToaster;
 
     public LocationModel $location;
     public $success = null;
@@ -53,28 +55,23 @@ class Location extends Component
         $this->location->save();
         $this->location = new LocationModel();
 
+        $this->alert("success", "Success", "Location successfully added");
+
         $this->emit('pg:eventRefresh-default');
     }
 
     public function delete(LocationModel $location) {
 
         if ($location->hasStores) {
-            $toaster_message = [
-                "status" => "error",
-                "title" => "Error",
-                "message" => "This location is currently in use and cannot be deleted"
-            ];
-            $this->emit("toaster_message", $toaster_message);
+
+            $this->alert("error", "Error", "This location is currently in use and cannot be deleted");
+
             return;
         }
 
         $location->delete();
-        $toaster_message = [
-            "status" => "success",
-            "title" => "Success",
-            "message" => "Location deleted"
-        ];
-        $this->emit("toaster_message", $toaster_message);
+
+        $this->alert("success", "Success", "Location deleted");
 
         $this->emit('pg:eventRefresh-default');
 

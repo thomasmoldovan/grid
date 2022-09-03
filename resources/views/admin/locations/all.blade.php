@@ -1,8 +1,7 @@
 @extends('admin.index')
 
 @section('main')    
-    <main id="main" class="main">
-        <livewire:toaster-component/>
+    <main id="main" class="main">        
         <div class="container-fluid">
             <div class="pagetitle">
                 <h1>Locations</h1>
