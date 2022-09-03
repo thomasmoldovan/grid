@@ -45,18 +45,6 @@
 </head>
 
 <body>
-
-    @if(Session::has("toaster_message"))
-    {{-- {{ Session::forget("toaster_message") }} --}}
-    <script>
-        showToast('{{ Session::get("toaster_status") }}', 
-                  '{{ ucwords(Session::get("toaster_title")) }}', 
-                  '{{ Session::get("toaster_message") }}',
-                  true)
-    </script>
-    {{ Session::forget("toaster_message") }}
-    @endif
-
     <!-- ======= Header ======= -->
     @include('admin.main.top-bar-navigation')
 

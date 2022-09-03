@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Categories;
 
-use App\Models\Store;
+use App\Models\Category;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\Rules\{Rule, RuleActions};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridComponent, PowerGridEloquent};
 
-final class StoreGrid extends PowerGridComponent
+final class CategoryGrid extends PowerGridComponent
 {
     use ActionButton;
 
@@ -23,6 +22,8 @@ final class StoreGrid extends PowerGridComponent
     */
     public function setUp(): array
     {
+        $this->showCheckBox();
+
         return [
             Exportable::make('export')
                 ->striped()
@@ -45,16 +46,11 @@ final class StoreGrid extends PowerGridComponent
     /**
     * PowerGrid datasource.
     *
-    * @return Builder<\App\Models\Store>
+    * @return Builder<\App\Models\Category>
     */
     public function datasource(): Builder
     {
-        return Store::query()
-            ->join('location', 'location.id', '=', 'store.location_id')
-            // ->join('category', 'category.id', '=', 'store.category_id')
-            ->select('store.*', 'location.name as location_name', 
-            // 'category.name as category_name'
-        );
+        return Category::query();
     }
 
     /*
@@ -87,20 +83,12 @@ final class StoreGrid extends PowerGridComponent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')
-            ->addColumn('image', function (Store $store) {
-                return '<img src="/' . $store->image . '" width="80" height="40">';
-            })
-            ->addColumn('location_id')
-            // ->addColumn('category_id')
+            ->addColumn('parent_id')
+            ->addColumn('icon')
+            ->addColumn('color')
             ->addColumn('name')
-            ->addColumn('address', function(Store $store) {
-                return Str::limit($store->address, 20, '...');
-            })
-            ->addColumn('link', function(Store $store) {
-                return '<a href="' . $store->link . '" target="_blank"><i class="fa fa-link text-success"></i></a>';
-            })
-            ->addColumn('display')
-            ->addColumn('status');
+            ->addColumn('created_at_formatted', fn (Category $model) => Carbon::parse($model->created_at)->format('d/m/Y H:i:s'))
+            ->addColumn('updated_at_formatted', fn (Category $model) => Carbon::parse($model->updated_at)->format('d/m/Y H:i:s'));
     }
 
     /*
@@ -120,44 +108,32 @@ final class StoreGrid extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('ID', 'id')
+            Column::make('ID', 'id'),
+
+            Column::make('PARENT ID', 'parent_id'),
+
+            Column::make('CATEGORY ICON', 'icon')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('IMAGE', 'image'),
-
-            Column::make('LOCATION ID', 'location_name')
+            Column::make('CATEGORY COLOR', 'color')
                 ->sortable()
                 ->searchable(),
 
-            // Column::make('CATEGORY ID', 'category_name'),
-
-            Column::make('NAME', 'name')
+            Column::make('CATEGORY NAME', 'name')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('ADDRESS', 'address')
-                ->sortable()
-                ->searchable(),
+            Column::make('CREATED AT', 'created_at_formatted', 'created_at')
+                ->searchable()
+                ->sortable(),
 
-            Column::make('LINK', 'link')
-                ->headerAttribute('text-center')
-                ->bodyAttribute('text-center')
-                ->sortable()
-                ->searchable(),
+            Column::make('UPDATED AT', 'updated_at_formatted', 'updated_at')
+                ->searchable()
+                ->sortable(),
 
-            Column::make('DISPLAY', 'display')
-                ->headerAttribute('text-center')
-                ->bodyAttribute('text-center')
-                ->sortable()
-                ->toggleable(),
-
-            Column::make('STATUS', 'status')
-                ->headerAttribute('text-center')
-                ->bodyAttribute('text-center')
-                ->sortable()
-                ->toggleable(),
-        ];
+        ]
+;
     }
 
     /*
@@ -169,7 +145,7 @@ final class StoreGrid extends PowerGridComponent
     */
 
      /**
-     * PowerGrid Store Action Buttons.
+     * PowerGrid Category Action Buttons.
      *
      * @return array<int, Button>
      */
@@ -178,14 +154,13 @@ final class StoreGrid extends PowerGridComponent
     {
        return [
            Button::make('edit', 'Edit')
-               ->class('btn btn-primary btn-sm w-100')
-               ->target('_self')
-               ->route('stores.edit', ['id' => 'id']),
+               ->class('btn btn-warning btn-sm')
+               ->route('categories.edit', ['id' => 'id'])
+               ->method('post'),
 
            Button::make('destroy', 'Delete')
-               ->class('btn btn-danger btn-sm w-100')
-               ->route('stores.delete', ['id' => 'id'])
-               ->target('_self')
+               ->class('btn btn-danger btn-sm')
+               ->route('categories.destroy', ['id' => 'id'])
                ->method('delete')
         ];
     }
@@ -199,7 +174,7 @@ final class StoreGrid extends PowerGridComponent
     */
 
      /**
-     * PowerGrid Store Action Rules.
+     * PowerGrid Category Action Rules.
      *
      * @return array<int, RuleActions>
      */
@@ -211,7 +186,7 @@ final class StoreGrid extends PowerGridComponent
 
            //Hide button edit for ID 1
             Rule::button('edit')
-                ->when(fn($store) => $store->id === 1)
+                ->when(fn($category) => $category->id === 1)
                 ->hide(),
         ];
     }
@@ -219,15 +194,6 @@ final class StoreGrid extends PowerGridComponent
 
     public function onUpdatedEditable(string $id, string $field, string $value): void
     {
-        $store = Store::find($id);
-        $store->{$field} = $value;
-        $store->save();
-    }
-
-    public function onUpdatedToggleable(string $id, string $field, string $value): void
-    {
-        $store = Store::find($id);
-        $store->{$field} = $value;
-        $store->save();
+        Category::find($id)->update([$field => $value]);
     }
 }

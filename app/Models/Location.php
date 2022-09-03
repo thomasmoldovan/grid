@@ -30,4 +30,8 @@ class Location extends Model
     {
         return $value !== 1;
     }
+
+    public function getHasStoresAttribute() {
+        return $this->store()->count() > 0;
+    }
 }

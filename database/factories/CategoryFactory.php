@@ -13,10 +13,8 @@ class CategoryFactory extends Factory
 
     public function definition()
     {
-        $id = Category::get()->last() ? Category::get()->last()->id : 0;
-
         return [
-            'parent_id' => $id + 1,
+            'parent_id' => 1,
             'icon' => 'bi bi-gem',
             'color' => "#".substr(md5(rand()), 0, 6),
             'name' => fake()->word(),

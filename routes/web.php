@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LocationController;
 use App\Http\Controllers\Admin\StoreController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,9 +18,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
@@ -28,7 +27,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
     Route::post('/category/add', [CategoryController::class, 'add'])->name('categories.add');
     Route::get('/category/edit/{id}', [CategoryController::class, 'edit'])->name('categories.edit');
     Route::post('/category/update/{id}', [CategoryController::class, 'update'])->name('categories.update');
-    Route::get('/category/delete/{id}', [CategoryController::class, 'delete'])->name('categories.delete');
+    Route::get('/category/delete/{id}', [CategoryController::class, 'delete'])->name('categories.destroy');
     Route::get('/category/restore/{id}', [CategoryController::class, 'restore']);
     Route::get('/category/remove/{id}', [CategoryController::class, 'remove']);
 

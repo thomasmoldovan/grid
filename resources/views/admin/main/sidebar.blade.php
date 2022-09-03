@@ -9,22 +9,26 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+            <a data-bs-target="#components-nav" data-bs-toggle="collapse" href="#"
+                class="nav-link {{ Route::is('categories.all') || Route::is('stores.all') || Route::is('locations.all') ? "active" : "collapsed" }}"
+                {{ Route::is('categories.all') || Route::is('stores.all') || Route::is('locations.all') ? "class='nav-link active' aria-expanded=true" : "class='nav-link collapsed' aria-expanded=false" }}>
+
                 <i class="bi bi-menu-button-wide"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
-            <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <ul id="components-nav" data-bs-parent="#sidebar-nav"
+            class="nav-content {{ Route::is('categories.all') || Route::is('stores.all') || Route::is('locations.all') ? "show active" : "collapse" }}">
                 <li>
-                    <a href="{{ route('categories.all') }}">
+                    <a href="{{ route('categories.all') }}" class="{{ Route::is('categories.all') ? 'active' : '' }}">
                         <i class="bi bi-circle"></i><span>Categories</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('stores.all') }}">
+                    <a href="{{ route('stores.all') }}" class="{{ Route::is('stores.all') ? 'active' : '' }}">
                         <i class="bi bi-circle"></i><span>Stores</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('locations.all') }}">
+                    <a href="{{ route('locations.all') }}" class="{{ Route::is('locations.all') ? 'active' : '' }}">
                         <i class="bi bi-circle"></i><span>Locations</span>
                     </a>
                 </li>

@@ -1,19 +1,23 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Locations;
 
-use App\Models\Category;
+use App\Models\Location;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Rules\{Rule, RuleActions};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridComponent, PowerGridEloquent};
 
-final class CategoryGrid extends PowerGridComponent
+final class LocationGrid extends PowerGridComponent
 {
     use ActionButton;
 
-    public $category_icon;
+    protected $name = null;
+
+    protected $listeners = [
+        'refresh-grid' => '$refresh'
+    ];
 
     /*
     |--------------------------------------------------------------------------
@@ -24,8 +28,6 @@ final class CategoryGrid extends PowerGridComponent
     */
     public function setUp(): array
     {
-        $this->showCheckBox();
-
         return [
             Exportable::make('export')
                 ->striped()
@@ -48,11 +50,11 @@ final class CategoryGrid extends PowerGridComponent
     /**
     * PowerGrid datasource.
     *
-    * @return Builder<\App\Models\Category>
+    * @return Builder<\App\Models\Location>
     */
     public function datasource(): Builder
     {
-        return Category::query();
+        return Location::query();
     }
 
     /*
@@ -85,12 +87,10 @@ final class CategoryGrid extends PowerGridComponent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')
-            ->addColumn('parent_id')
-            ->addColumn('category_icon')
-            ->addColumn('category_color')
-            ->addColumn('category_name')
-            ->addColumn('created_at_formatted', fn (Category $model) => Carbon::parse($model->created_at)->format('d/m/Y H:i:s'))
-            ->addColumn('updated_at_formatted', fn (Category $model) => Carbon::parse($model->updated_at)->format('d/m/Y H:i:s'));
+            ->addColumn('name')
+            ->addColumn('active')
+            ->addColumn('created_at_formatted', fn (Location $model) => Carbon::parse($model->created_at)->format('d/m/Y H:i:s'))
+            ->addColumn('updated_at_formatted', fn (Location $model) => Carbon::parse($model->updated_at)->format('d/m/Y H:i:s'));
     }
 
     /*
@@ -111,36 +111,23 @@ final class CategoryGrid extends PowerGridComponent
     {
         return [
             Column::make('ID', 'id')
-                ->makeInputRange(),
+                ->sortable()
+                ->searchable(),
 
-            Column::make('PARENT ID', 'parent_id')
-                ->makeInputRange(),
-
-            Column::make('CATEGORY ICON', 'category_icon')
+            Column::make('LOCATION NAME', 'name')
                 ->sortable()
                 ->searchable()
-                ->makeInputText()
-                ->editOnClick(true),
+                ->editOnClick(false),
 
-            Column::make('CATEGORY COLOR', 'category_color')
+            Column::make('ACTIVE', 'active')
                 ->sortable()
-                ->searchable()
-                ->makeInputText(),
-
-            Column::make('CATEGORY NAME', 'category_name')
-                ->sortable()
-                ->searchable()
-                ->makeInputText(),
+                ->toggleable(),
 
             Column::make('CREATED AT', 'created_at_formatted', 'created_at')
-                ->searchable()
-                ->sortable()
-                ->makeInputDatePicker(),
+                ->sortable(),
 
             Column::make('UPDATED AT', 'updated_at_formatted', 'updated_at')
-                ->searchable()
-                ->sortable()
-                ->makeInputDatePicker(),
+                ->sortable(),
 
         ]
 ;
@@ -155,7 +142,7 @@ final class CategoryGrid extends PowerGridComponent
     */
 
      /**
-     * PowerGrid Category Action Buttons.
+     * PowerGrid Location Action Buttons.
      *
      * @return array<int, Button>
      */
@@ -163,14 +150,15 @@ final class CategoryGrid extends PowerGridComponent
     public function actions(): array
     {
        return [
-           Button::make('edit', 'Edit')
-               ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
-               ->route('category.edit', ['category' => 'id']),
+        //    Button::make('edit', 'Edit')
+        //        ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
+        //        ->route('location.edit', ['location' => 'id']),
 
-           Button::make('destroy', 'Delete')
-               ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-               ->route('category.destroy', ['category' => 'id'])
-               ->method('delete')
+            Button::make('delete', 'Delete')
+               ->class('btn btn-danger btn-sm w-100')
+            //    ->route('locations.delete', ['id' => 'id'])
+               ->target('_self')
+               ->emit('delete', ['id' => 'id'])
         ];
     }
 
@@ -183,7 +171,7 @@ final class CategoryGrid extends PowerGridComponent
     */
 
      /**
-     * PowerGrid Category Action Rules.
+     * PowerGrid Location Action Rules.
      *
      * @return array<int, RuleActions>
      */
@@ -195,7 +183,7 @@ final class CategoryGrid extends PowerGridComponent
 
            //Hide button edit for ID 1
             Rule::button('edit')
-                ->when(fn($category) => $category->id === 1)
+                ->when(fn($location) => $location->id === 1)
                 ->hide(),
         ];
     }
@@ -203,6 +191,15 @@ final class CategoryGrid extends PowerGridComponent
 
     public function onUpdatedEditable(string $id, string $field, string $value): void
     {
-        Category::find($id)->update([$field => $value]);
+        $location = Location::find($id);
+        $location->{$field} = $value;
+        $location->save();
+    }
+
+    public function onUpdatedToggleable(string $id, string $field, string $value): void
+    {
+        $location = Location::find($id);
+        $location->{$field} = $value;
+        $location->save();
     }
 }
