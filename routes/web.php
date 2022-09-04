@@ -27,7 +27,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
     Route::post('/category/add', [CategoryController::class, 'add'])->name('categories.add');
     Route::get('/category/edit/{id}', [CategoryController::class, 'edit'])->name('categories.edit');
     Route::post('/category/update/{id}', [CategoryController::class, 'update'])->name('categories.update');
-    Route::get('/category/delete/{id}', [CategoryController::class, 'delete'])->name('categories.destroy');
+    Route::delete('/category/delete/{id}', [CategoryController::class, 'delete'])->name('categories.delete');
     Route::get('/category/restore/{id}', [CategoryController::class, 'restore']);
     Route::get('/category/remove/{id}', [CategoryController::class, 'remove']);
 

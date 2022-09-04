@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Categories;
 
 use App\Models\Category;
+use App\Models\Location;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Rules\{Rule, RuleActions};
@@ -13,6 +14,12 @@ final class CategoryGrid extends PowerGridComponent
 {
     use ActionButton;
 
+    protected $name = null;
+
+    protected $listeners = [
+        'refresh-grid' => '$refresh'
+    ];
+
     /*
     |--------------------------------------------------------------------------
     |  Features Setup
@@ -22,8 +29,6 @@ final class CategoryGrid extends PowerGridComponent
     */
     public function setUp(): array
     {
-        $this->showCheckBox();
-
         return [
             Exportable::make('export')
                 ->striped()
@@ -46,11 +51,13 @@ final class CategoryGrid extends PowerGridComponent
     /**
     * PowerGrid datasource.
     *
-    * @return Builder<\App\Models\Category>
+    * @return Builder<\App\Models\Location>
     */
     public function datasource(): Builder
     {
-        return Category::query();
+        return Category::query()
+            ->join("category as category_parent", "category.parent_id", "=", "category_parent.id")
+            ->select("category.*", "category_parent.name as parent_name");
     }
 
     /*
@@ -84,8 +91,12 @@ final class CategoryGrid extends PowerGridComponent
         return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('parent_id')
-            ->addColumn('icon')
-            ->addColumn('color')
+            ->addColumn('icon', function (Category $category) {
+                return '<div class="text-center"><i class="' . $category->icon . '" style="font-size: 1.5rem;"></i></div>';
+            })
+            ->addColumn('color', function (Category $category) {
+                return "<div style='margin: auto; background: {$category->color} !important; width: 20px; height: 20px;'></div>";
+            })
             ->addColumn('name')
             ->addColumn('created_at_formatted', fn (Category $model) => Carbon::parse($model->created_at)->format('d/m/Y H:i:s'))
             ->addColumn('updated_at_formatted', fn (Category $model) => Carbon::parse($model->updated_at)->format('d/m/Y H:i:s'));
@@ -108,19 +119,23 @@ final class CategoryGrid extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('ID', 'id'),
-
-            Column::make('PARENT ID', 'parent_id'),
-
-            Column::make('CATEGORY ICON', 'icon')
+            Column::make('ID', 'id')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('CATEGORY COLOR', 'color')
+            Column::make('NAME', 'name')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('CATEGORY NAME', 'name')
+            Column::make('PARENT', 'parent_name')
+                ->sortable()
+                ->searchable(),
+
+            Column::make('ICON', 'icon')
+                ->sortable()
+                ->searchable(),
+
+            Column::make('COLOR', 'color')
                 ->sortable()
                 ->searchable(),
 
@@ -145,7 +160,7 @@ final class CategoryGrid extends PowerGridComponent
     */
 
      /**
-     * PowerGrid Category Action Buttons.
+     * PowerGrid Location Action Buttons.
      *
      * @return array<int, Button>
      */
@@ -154,14 +169,14 @@ final class CategoryGrid extends PowerGridComponent
     {
        return [
            Button::make('edit', 'Edit')
-               ->class('btn btn-warning btn-sm')
-               ->route('categories.edit', ['id' => 'id'])
-               ->method('post'),
+                ->class('btn btn-primary btn-sm w-100')
+                ->target("_self")
+                ->emit("edit", ["id" => "id"]),
 
            Button::make('destroy', 'Delete')
-               ->class('btn btn-danger btn-sm')
-               ->route('categories.destroy', ['id' => 'id'])
-               ->method('delete')
+                ->class('btn btn-danger btn-sm w-100')
+                ->target("_self")
+                ->emit("delete", ["id" => "id"])
         ];
     }
 
@@ -174,7 +189,7 @@ final class CategoryGrid extends PowerGridComponent
     */
 
      /**
-     * PowerGrid Category Action Rules.
+     * PowerGrid Location Action Rules.
      *
      * @return array<int, RuleActions>
      */
@@ -186,7 +201,7 @@ final class CategoryGrid extends PowerGridComponent
 
            //Hide button edit for ID 1
             Rule::button('edit')
-                ->when(fn($category) => $category->id === 1)
+                ->when(fn($location) => $location->id === 1)
                 ->hide(),
         ];
     }

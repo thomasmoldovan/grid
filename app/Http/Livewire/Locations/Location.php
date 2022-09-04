@@ -4,8 +4,6 @@ namespace App\Http\Livewire\Locations;
 
 use App\Http\Livewire\WithToaster;
 use App\Models\Location as LocationModel;
-use Barryvdh\Debugbar\Facades\Debugbar;
-use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 
 class Location extends Component
@@ -13,10 +11,12 @@ class Location extends Component
     use WithToaster;
 
     public LocationModel $location;
+
+    public $edit = false;
     public $success = null;
-    public $message = "";
 
     protected $listeners = [
+        "edit" => "edit",
         "delete" => "delete"
     ];
 
@@ -40,41 +40,54 @@ class Location extends Component
     {
         $this->location = $location;
         $this->location->name = "";
-        $this->message = "";
+        $this->location->active = 0;
+        $this->edit = false;
     }
 
     public function render()
     {
-        return view('livewire.location.location-add');
+        return view('livewire.location.location-form');
     }
 
-    public function submit() {
+    public function submit() 
+    {
         $this->validate();
+        $updated = $this->location->id > 0;
 
-        $this->location->active = 1;
         $this->location->save();
-        $this->location = new LocationModel();
 
-        $this->alert("success", "Success", "Location successfully added");
-
+        $this->mount(new LocationModel());
+        $this->alert("success", "Success", "Location successfully ".($updated ? "updated" : "added"));
         $this->emit('pg:eventRefresh-default');
+
+        return;
     }
 
-    public function delete(LocationModel $location) {
+    public function edit(LocationModel $location) 
+    {
+        $this->location = $location;
+        $this->edit = true;
 
+        return;
+    }
+
+    public function delete(LocationModel $location) 
+    {
         if ($location->hasStores) {
-
             $this->alert("error", "Error", "This location is currently in use and cannot be deleted");
-
             return;
         }
 
         $location->delete();
 
         $this->alert("success", "Success", "Location deleted");
-
         $this->emit('pg:eventRefresh-default');
 
         return;
+    }
+
+    public function cancel() 
+    {
+        $this->mount(new LocationModel());
     }
 }

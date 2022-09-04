@@ -23,21 +23,20 @@
                         </div>
                         <form action="{{ route('categories.update', $current_category->id) }}" method="POST">
                             @csrf
-
                             <div class="col-md-12">
-                                <label for="category_name" class="form-label">Name <b class="text-danger">*</b></label>
-                                <input type="text" id="category_name" name="category_name" class="form-control"
+                                <label for="name" class="form-label">Name <b class="text-danger">*</b></label>
+                                <input type="text" id="name" name="name" class="form-control"
                                     value="{{ $current_category->category_name }}"
-                                    aria-describedby="update_category_button">
-                                @error('category_name')
+                                    aria-describedby="update_button">
+                                @error('name')
                                     <script>
-                                        $('#category_name').addClass('is-invalid');
+                                        $('#name').addClass('is-invalid');
                                     </script>
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                                 @if (session('success'))
                                     <script>
-                                        $('#category_name').addClass('is-valid').change();
+                                        $('#name').addClass('is-valid').change();
                                     </script>
                                     <div class="valid-feedback">{{ session('success') }}</div>
                                 @endif
@@ -55,20 +54,20 @@
 
                             <div class="row">
                                 <div class="col-md-2 pt-3">
-                                    <label for="category_color" class="form-label">Color</label>
-                                    <input type="color" id="category_color" name="category_color"
+                                    <label for="color" class="form-label">Color</label>
+                                    <input type="color" id="color" name="_color"
                                         class="form-control form-control-color" title="Choose your color"
-                                        value="{{ $current_category->category_color }}" placeholder="Category color"
+                                        value="{{ $current_category->color }}" placeholder="Category color"
                                         aria-describedby="add_category">
                                 </div>
 
                                 <div class="col-md-10 pt-3">
-                                    <label for="category_icon" class="form-label">Icon <small class="text-primary">ie.
+                                    <label for="icon" class="form-label">Icon <small class="text-primary">ie.
                                             <code><?= htmlentities('<i class="bi bi-gem"></i>') ?></code>&nbsp;-&nbsp;<i
                                                 class="bi bi-gem"></i></small>
                                     </label>
-                                    <input type="text" id="category_icon" name="category_icon" class="form-control"
-                                        value="{{ $current_category->category_icon }}" placeholder="Category icon"
+                                    <input type="text" id="icon" name="icon" class="form-control"
+                                        value="{{ $current_category->icon }}" placeholder="Category icon"
                                         aria-describedby="add_category">
                                 </div>
                             </div>
