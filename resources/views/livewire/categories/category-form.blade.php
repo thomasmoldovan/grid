@@ -5,7 +5,7 @@
         </div>
         <form wire:submit.prevent="submit">
             @csrf
-            <input type="hidden" id="name" name="name" wire:model.defer="category.id">
+            <input type="hidden" id="id" name="id" wire:model.defer="category.id">
             <div class="col-md-12">
                 <label for="name" class="form-label">Name <b class="text-danger">*</b></label>
                 <input type="text" id="name" name="name" class="form-control"
@@ -26,7 +26,8 @@
 
             <div class="col-md-12 pt-3">
                 <label for="parent_id" class="form-label">Parent Category</label>
-                <select wire:model.defer="category.parent_id" id="parent_id" name="parent_id" class="form-select">
+                <select id="parent_id" name="parent_id" class="form-select"
+                    wire:model.defer="category.parent_id">
                     <option selected disabled value="0">Parent category</option>
                     @foreach ($parents as $parent)
                         <option value="{{ $parent->id }}">{{ $parent->name }}</option>

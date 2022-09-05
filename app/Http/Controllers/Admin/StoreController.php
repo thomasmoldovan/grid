@@ -28,10 +28,10 @@ class StoreController extends Controller
 
     public function all()
     {
-        $stores = Store::oldest()->paginate(10);
-        $locations = Location::where("active", "=", 1)->get();
+        // $stores = Store::oldest()->paginate(10);
+        // $locations = Location::where("active", "=", 1)->get();
 
-        return view('admin.stores.all', compact('stores', 'locations'));
+        return view('admin.stores.index');
     }
 
     public function add(Request $request) {

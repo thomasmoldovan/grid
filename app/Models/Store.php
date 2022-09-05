@@ -13,7 +13,6 @@ class Store extends Model
 
     protected $fillable = [
         "location_id",
-        // "category_id",
         "name",
         "image",
         "address",
@@ -26,9 +25,4 @@ class Store extends Model
     {
         return $this->belongsTo(Location::class, "location_id");
     }
-
-    // public function category()
-    // {
-    //     return $this->belongsTo(Category::class, "category_id");
-    // }
 }

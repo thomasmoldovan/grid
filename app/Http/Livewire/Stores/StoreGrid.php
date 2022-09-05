@@ -51,9 +51,7 @@ final class StoreGrid extends PowerGridComponent
     {
         return Store::query()
             ->join('location', 'location.id', '=', 'store.location_id')
-            // ->join('category', 'category.id', '=', 'store.category_id')
             ->select('store.*', 'location.name as location_name', 
-            // 'category.name as category_name'
         );
     }
 
@@ -96,7 +94,6 @@ final class StoreGrid extends PowerGridComponent
                 return '<img src="' . $store->image . '" width="60" height="30">';
             })
             ->addColumn('location_id')
-            // ->addColumn('category_id')
             ->addColumn('name')
             ->addColumn('address', function(Store $store) {
                 return Str::limit($store->address, 20, '...');
@@ -131,7 +128,7 @@ final class StoreGrid extends PowerGridComponent
 
             Column::make('IMAGE', 'image'),
 
-            Column::make('LOCATION NAME', 'location_name')
+            Column::make('LOCATION', 'location_name')
                 ->sortable()
                 ->searchable(),
 
@@ -182,14 +179,14 @@ final class StoreGrid extends PowerGridComponent
        return [
            Button::make('edit', 'Edit')
                ->class('btn btn-primary btn-sm w-100')
-               ->target('_self')
-               ->route('stores.edit', ['id' => 'id']),
+               ->target("_self")
+               ->emit("edit", ["id" => "id"]),
 
            Button::make('destroy', 'Delete')
                ->class('btn btn-danger btn-sm w-100')
                ->route('stores.delete', ['id' => 'id'])
-               ->target('_self')
-               ->method('delete')
+               ->target("_self")
+               ->emit("delete", ["id" => "id"])
         ];
     }
 

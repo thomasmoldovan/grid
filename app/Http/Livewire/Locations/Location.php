@@ -20,22 +20,6 @@ class Location extends Component
         "delete" => "delete"
     ];
 
-    protected $rules = [
-        "location.name" => [
-            "required",
-            "unique:location",
-            "min:3",
-            "max:125"
-        ]
-    ];
-
-    protected $messages = [
-        "location.name.required" => "Please enter a location name",
-        "location.name.unique" => "This location name is already in use",
-        "location.name.min" => "The location name must be at least 3 characters long",
-        "location.name.max" => "The location name must be less than 125 characters long"
-    ];
-
     public function mount(LocationModel $location)
     {
         $this->location = $location;
@@ -46,7 +30,7 @@ class Location extends Component
 
     public function render()
     {
-        return view('livewire.location.location-form');
+        return view('livewire.locations.location-form');
     }
 
     public function submit() 
@@ -89,5 +73,27 @@ class Location extends Component
     public function cancel() 
     {
         $this->mount(new LocationModel());
+    }
+
+    public function rules() 
+    {
+        return [
+            "location.name" => [
+                "required",
+                "unique:location",
+                "min:3",
+                "max:125"
+            ]
+            ];
+    }
+
+    public function nessages()
+    {
+        return [
+            "location.name.required" => "Please enter a location name",
+            "location.name.unique" => "This location name is already in use",
+            "location.name.min" => "The location name must be at least 3 characters long",
+            "location.name.max" => "The location name must be less than 125 characters long"
+        ];
     }
 }

@@ -5,7 +5,7 @@
         </div>
         <form wire:submit.prevent="submit">
             @csrf
-            <input type="hidden" id="name" name="name" wire:model.defer="location.id">
+            <input type="hidden" id="id" name="id" wire:model.defer="location.id">
             <div class="col-md-12">
                 <label for="name" class="form-label">Name <b class="text-danger">*</b></label>
                 <input type="text" id="name" name="name" class="form-control"
