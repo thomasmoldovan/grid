@@ -28,6 +28,7 @@
                 <label for="location_id" class="form-label">Location <b class="text-danger">*</b></label>
                 <select id="location_id" name="location_id" class="form-select"
                     wire:model.defer="store.location_id">
+                    <option value="">Select a location</option>
                     @foreach ($locations as $key => $location)
                         <option value="{{ $location->id }}">{{ $location->name }}</option>
                     @endforeach
@@ -57,26 +58,26 @@
                 </div>
             </div>
 
-            <div class="form-check form-switch mt-3">
-                <input id="display" name="display" class="form-check-input" type="checkbox"
-                    value="on" checked
-                    wire:model.defer="store.display">
-                <label class="form-check-label" for="display">Display in stores</label>
-            </div>
-
             <div class="col-md-12 pt-3">
                 <label for="image" class="form-label">Image <b class="text-danger">*</b></label>
-                <input type="file" id="image" name="image" class="form-control"
+                <input type="file" id="image{{ $unique_image_id }}" name="image" class="form-control"
+                @if ($edit)
+                    value="{{ $image }}"
+                @endif
                     placeholder="Store image"
-                    wire:model.defer="store.image">
+                    wire:model="image">
                 <div class="validation-message">
-                    {{ $errors->first('store.image') }}
+                    {{ $errors->first('image') }}
                 </div>
+
+                @if ($preview_file)
+                    <img src="{{ url($preview_file) }}" class="w-100 h-100 pt-3" style="object-fit: contain">
+                @endif
             </div>
 
             <div class="text-end pt-3">
                 @if ($edit)
-                    <button wire:click="cancel()" type="button" id="cancel_button" class="btn btn-secondary">Cancel</button>
+                    <button wire:click="refreshAll()" type="button" id="cancel_button" class="btn btn-secondary">Cancel</button>
                 @endif
                 <button type="submit" id="add_store" class="btn btn-primary">{{ $edit ? "Update" : "Add" }}</button>
             </div>

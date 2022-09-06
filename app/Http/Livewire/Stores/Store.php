@@ -2,23 +2,24 @@
 
 namespace App\Http\Livewire\Stores;
 
-use App\Http\Livewire\WithImages;
 use App\Http\Livewire\WithToaster;
 use App\Models\Location;
 use App\Models\Store as StoreModel;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class Store extends Component
 {
     use WithToaster;
-    use WithImages;
     use WithFileUploads;
 
     public $store;
     public $location;
+
+    public $image;
+    public $unique_image_id;
+    public $preview_url = "";
+    public $preview_file = "";
 
     public $edit = false;
     public $success = null;
@@ -33,6 +34,12 @@ class Store extends Component
         $this->store = $store;
         $this->locations = Location::all();
         $this->edit = false;
+
+        $this->image = "";
+        $this->preview_url = "";
+        $this->preview_file = "";
+        $this->unique_image_id = hexdec(uniqid());
+
     }
 
     public function render()
@@ -40,27 +47,60 @@ class Store extends Component
         return view('livewire.stores.store-form');
     }
 
-    public function submit(Request $request) 
+    public function submit() 
     {
-        // $this->validate();
-        $validation = Validator::make($request->all(), $this->rules(), $this->messages());
-        $updated = $this->store->id > 0;
+        $this->validate();
 
-        $uploaded_image = $this->extract_image_from_request($request);
+        // Image validation
+        if (!$this->edit || ($this->edit && $this->image)) {
+            $this->validate([
+                "image" => ["required", 'image', "mimes:jpg,jpeg,png"]
+            ]);
+        }
+
+        if (!empty($this->image)) {
+            // Remove previously saved image
+            try {
+                unlink($this->store->image);
+            } catch (\Throwable $th) {}
+
+            $image_extension = strtolower($this->image->getClientOriginalExtension());
+            $image_name = $this->unique_image_id.".".$image_extension;
+            $this->store->image = $this->image->storeAs("images/stores", $image_name);
+        }
 
         $this->store->save();
 
-        $this->alert("success", "Success", "Store successfully ".($updated ? "updated" : "added"));
+        // Remove the temporary image file
+        if (!empty($this->image)) {
+            $temp_file = "livewire-tmp/".$this->image->getFilename();
+            try {
+                unlink($temp_file);
+            } catch (\Throwable $th) {}
+        }
 
+        $this->alert("success", "Success", "Store successfully ".($this->edit ? "updated" : "added"));
         $this->refreshAll();
 
         return;
+    }
+
+    public function updatedImage() {
+        // Remove previous preview file
+        try {
+            unlink($this->preview_file);
+        } catch (\Throwable $th) {}
+
+        // New preview file
+        $this->preview_url = $this->image->temporaryUrl();
+        $this->preview_file = "livewire-tmp/".$this->image->getFilename();
     }
 
     public function edit(StoreModel $store) 
     {
         $this->edit = true;
         $this->store = $store;
+        $this->preview_file = $store->image;
 
         return;
     }
@@ -74,16 +114,14 @@ class Store extends Component
 
         $store->delete();
 
-        $this->alert("success", "Success", "Location deleted");
-        
+        try {
+            unlink($store->image);
+        } catch (\Throwable $th) {}
+
+        $this->alert("success", "Success", "Location deleted");        
         $this->refreshAll();
 
         return;
-    }
-
-    public function cancel() 
-    {
-        $this->refreshAll();
     }
 
     public function refreshAll() 
@@ -98,7 +136,7 @@ class Store extends Component
         return [
             "store.name" => [
                 "required",
-                "unique:store",
+                "unique:store,name,".$this->store->id.",id",
                 "min:3",
                 "max:125"
             ],
@@ -106,14 +144,6 @@ class Store extends Component
                 "required",
                 "numeric",
                 "exists:location,id"
-            ],
-            "store.image" => [
-                "required",
-                'image',
-                "mimes:jpg,jpeg,png"
-            ],
-            "store.display" => [
-                "boolean"
             ],
             "store.link" => [
                 "required",

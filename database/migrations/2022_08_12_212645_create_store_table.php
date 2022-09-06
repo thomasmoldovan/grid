@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('image');
             $table->string('address');
             $table->string('link');
-            $table->boolean('display')->default(0);
-            $table->boolean('status')->default(0);
+            $table->boolean('display')->nullable()->default(0);
+            $table->boolean('status')->nullable()->default(0);
             $table->timestamps();
         });
     }

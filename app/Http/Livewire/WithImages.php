@@ -19,5 +19,4 @@ trait WithImages
 
         return $last_image;
     }
-
 }

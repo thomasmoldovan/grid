@@ -91,7 +91,7 @@ final class StoreGrid extends PowerGridComponent
         return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('image', function (Store $store) {
-                return '<img src="' . $store->image . '" width="60" height="30">';
+                return '<img src="'.url("/".$store->image).'" width="60" height="30">';
             })
             ->addColumn('location_id')
             ->addColumn('name')
