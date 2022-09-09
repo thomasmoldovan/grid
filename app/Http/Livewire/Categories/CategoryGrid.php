@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Categories;
 
 use App\Models\Category;
-use App\Models\Location;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Rules\{Rule, RuleActions};

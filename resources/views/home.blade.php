@@ -38,6 +38,7 @@
     <script src="/assets/js/common.js"></script>
 
     <!-- Template Main CSS File -->
+    <link href="/assets/css/style.css" rel="stylesheet">
     <link href="/assets/css/main.css" rel="stylesheet">
 
     @livewireStyles
@@ -46,22 +47,15 @@
 
 
 <body>
-    @if(Session::has("toaster_message"))
-    {{-- {{ Session::forget("toaster_message") }} --}}
-    <script>
-        showToast('{{ Session::get("toaster_status") }}', 
-                  '{{ ucwords(Session::get("toaster_title")) }}', 
-                  '{{ Session::get("toaster_message") }}',
-                  true)
-    </script>
-    {{-- {{ Session::forget("toaster_message") }} --}}
-    @endif
+    <!-- ======= Toaster ======= -->
+    <livewire:toaster-component/>
+    
     <div class="links-navbar text-white pb-0 pt-0">
-        <div class="container h-100">
+        <div class="container h-100 p-0">
             <div class="h-100" id="navbarCollapse">
                 <div class="d-flex justify-content-between">
                     <div class="dropdown">
-                        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button"
+                        <a class="nav-item nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-map-marker-alt"></i> Locations
                         </a>
@@ -85,7 +79,7 @@
         <div class="container d-flex justify-content-between">
             <div>
                 <div class="d-table-cell d-flex justify-content-start">
-                    <a href="/laravela/public/" class="navbar-brand">{{ $settings["SETTINGS_WEBSITE_NAME"] }}</a>
+                    <a href="{{ route('home') }}" class="navbar-brand">{{ $settings["SETTINGS_WEBSITE_NAME"] }}</a>
                     <div class="logo-category-spacer"></div>
                 </div>
             </div>
@@ -122,9 +116,10 @@
 
                 @if (Auth::check())
                     <a href="{{ route('dashboard') }}"
-                        class="text-primary align-self-center item-name-font-weight">
+                        class="text-primary align-self-center item-name-font-weight pe-3">
                         <span>Dashboard</span>
                     </a>
+                    <a href="{{ route('logout') }}" class="text-primary align-self-center item-name-font-weight">Sign out</a>
                 @else
                     <a href="{{ route('login') }}" class="text-primary align-self-center item-name-font-weight pe-3">Log in</a>
                     <a href="{{ route('register') }}" class="text-primary align-self-center item-name-font-weight">Register</a>
@@ -135,11 +130,10 @@
                 <div class="container d-flex justify-content-center flex-wrap pb-3 pt-3 bg-secondary">
                     @foreach ($categories as $key => $category)
                     <a class="category-item d-table m-2"
-                        href="/laravela/public/category/view/{{ $category->name }}"
+                        href="{{ route('category.browse', $category->name) }}"
                         style="background: {{ $category->color }};">
                         <div class="d-table-cell align-middle text-black bold">
-                            <span><i class="icon-pr {{ $category->icon }}"></i>{{ $category->name
-                                }}</span>
+                            <span><i class="icon-pr {{ $category->icon }}"></i>{{ $category->name }}</span>
                         </div>
                     </a>
                     @endforeach
@@ -147,6 +141,14 @@
             </div>
         </div>
     </nav>
+
+    <div class="container">
+        <div class="col-2">
+            <!-- ======= Main ======= -->
+            @yield("main")
+        </div>
+    </div>
+
 
     <!-- Vendor JS Files -->
     <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>

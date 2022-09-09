@@ -8,7 +8,7 @@ use App\Models\Store as StoreModel;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-class Store extends Component
+class StoreComponent extends Component
 {
     use WithToaster;
     use WithFileUploads;

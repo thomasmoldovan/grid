@@ -640,7 +640,7 @@ h1, h2, h3, h4, h5, h6 {
   transform: rotate(180deg);
 }
 .sidebar-nav .nav-content {
-  padding: 5px 0 0 0;
+  padding: 0px 0 0 0;
   margin: 0;
   list-style: none;
 }

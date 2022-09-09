@@ -6,7 +6,7 @@ use App\Http\Livewire\WithToaster;
 use App\Models\Category as CategoryModel;
 use Livewire\Component;
 
-class Category extends Component
+class CategoryComponent extends Component
 {
     use WithToaster;
 

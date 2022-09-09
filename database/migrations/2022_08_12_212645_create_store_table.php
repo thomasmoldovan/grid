@@ -11,7 +11,6 @@ return new class extends Migration
         Schema::create('store', function (Blueprint $table) {
             $table->id();
             $table->foreignId('location_id')->references('id')->on('location');
-            // $table->foreignId('category_id')->references('id')->on('category');
             $table->string('name');
             $table->string('image');
             $table->string('address');

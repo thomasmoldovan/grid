@@ -19,7 +19,7 @@
                     <livewire:categories.category-grid/>
                 </div>
                 <div class="col-lg-3 p-0 ps-lg-3">
-                    <livewire:categories.category/>
+                    <livewire:categories.category-component/>
                 </div>
             </div>            
         </div>        

@@ -22,5 +22,9 @@ class CategorySeeder extends Seeder
         foreach($categories as &$category) {
             Category::factory(2)->create(['parent_id' => $category->id]); // create subcategories
         }
+
+        // Category::factory(1)
+        //     ->has(Category::factory()->count(3))
+        //     ->create();
     }
 }

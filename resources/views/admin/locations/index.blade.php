@@ -19,7 +19,7 @@
                     <livewire:locations.location-grid/>
                 </div>
                 <div class="col-lg-3 p-0 ps-lg-3">
-                    <livewire:locations.location/>
+                    <livewire:locations.location-component/>
                 </div>
             </div>            
         </div>        

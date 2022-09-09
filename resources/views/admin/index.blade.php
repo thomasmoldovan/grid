@@ -55,7 +55,6 @@
     @include('admin.main.sidebar')
 
     <!-- ======= Main ======= -->
-    {{-- @include('admin.main.main')     --}}
     @yield("main")
 
     {{-- <div class="font-sans text-gray-900 antialiased">

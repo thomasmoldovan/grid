@@ -16,10 +16,10 @@
             </div>
             <div class="row">
                 <div class="col-lg-9 p-3 mb-3 bg-white">
-                    <livewire:stores.store-grid />
+                    <livewire:stores.store-grid/>
                 </div>
                 <div class="col-lg-3 p-0 ps-lg-3">
-                    <livewire:stores.store />
+                    <livewire:stores.store-component/>
                 </div>
             </div>
         </div>

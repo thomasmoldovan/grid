@@ -6,7 +6,7 @@ use App\Http\Livewire\WithToaster;
 use App\Models\Location as LocationModel;
 use Livewire\Component;
 
-class Location extends Component
+class LocationComponent extends Component
 {
     use WithToaster;
 

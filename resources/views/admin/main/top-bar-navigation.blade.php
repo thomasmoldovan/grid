@@ -1,13 +1,12 @@
 <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
-        <a href="index.html" class="logo d-flex align-items-center">
+        <a href="{{ route('home') }}" class="logo d-flex align-items-center">
             {{-- <img src="backend/assets/img/logo.png" alt=""> --}}
-            <span class="d-none d-lg-block ms-3">Site Name</span>
+            <span class="d-none d-lg-block ms-3">{{ $settings["SETTINGS_WEBSITE_NAME"] }}</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
-        <a href="/laravela/public/" class="pl-3 nav-link">Front End</a>
-        <a href="/laravela/public/admin/" class="pl-3 nav-link">Admin</a>
+        <a href="{{ route('home') }}" class="pl-3 nav-link">Front End</a>
     </div><!-- End Logo -->
 
     <nav class="header-nav ms-auto">
