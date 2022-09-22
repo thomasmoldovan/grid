@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             LocationSeeder::class,
             StoreSeeder::class,
-            ImageSeeder::class,
+            // ImageSeeder::class,
         ]);
     }
 }

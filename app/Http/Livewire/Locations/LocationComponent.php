@@ -84,7 +84,7 @@ class LocationComponent extends Component
                 "min:3",
                 "max:125"
             ]
-            ];
+        ];
     }
 
     public function nessages()

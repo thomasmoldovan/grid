@@ -3,9 +3,9 @@
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LocationController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\StoreController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -47,8 +47,18 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
     Route::delete('/locations/delete/{id}', [LocationController::class, 'delete'])->name('locations.delete');
     Route::get('/locations/restore/{id}', [LocationController::class, 'restore']);
     Route::get('/locations/remove/{id}', [LocationController::class, 'remove']);
+
+    Route::get('/product/all', [ProductController::class, 'all'])->name('products.all');
+    Route::get('/product/create', [ProductController::class, 'create'])->name('create_product');
+    Route::post('/product/add', [ProductController::class, 'add'])->name('add_product');
+    Route::get('/product/edit/{id}', [ProductController::class, 'edit']);
+    Route::post('/product/update/{id}', [ProductController::class, 'update']);
+    Route::get('/product/delete/{id}', [ProductController::class, 'delete']);
+    Route::get('/product/view/{id}', [ProductController::class, 'view']);
+    Route::post('/getProductStoreLocation', [ProductController::class, 'getProductStoreLocation']);
+    Route::post('/setProductDefaultImage', [ProductController::class, 'setProductDefaultImage']);
 });
 
-Route::get('/browse/{category}/{subcategory?}', [PageController::class, 'browseCategory'])->name('category.browse');
+Route::get('/browse/{category}/{subcategory?}', [HomeController::class, 'browseCategory'])->name('category.browse');
 
 require __DIR__ . '/auth.php';
