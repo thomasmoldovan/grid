@@ -20,7 +20,7 @@ class CategorySeeder extends Seeder
         }
 
         foreach($categories as &$category) {
-            Category::factory(2)->create(['parent_id' => $category->id]); // create subcategories
+            Category::factory(random_int(2,4))->create(['parent_id' => $category->id]); // create subcategories
         }
 
         // Category::factory(1)
