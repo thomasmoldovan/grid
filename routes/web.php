@@ -6,7 +6,11 @@ use App\Http\Controllers\Admin\LocationController;
 use App\Http\Controllers\Admin\StoreController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
+use App\Mail\Mailer;
+use Illuminate\Contracts\Mail\Mailable;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,5 +54,28 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
 });
 
 Route::get('/browse/{category}/{subcategory?}', [PageController::class, 'browseCategory'])->name('category.browse');
+
+// Mail
+Route::get('send-mail', function () {   
+    $details = [
+        'title' => 'Mail from ItSolutionStuff.com',
+        'body' => 'This is for testing email using smtp',
+        'qrcode' => base64_encode('Thomas')
+    ];
+   
+    Mail::to('thomashimself@gmail.com')->send(new Mailer($details));   
+    dd("Email is Sent.");
+});
+
+// QR Code
+Route::get('/qrcode', function () {
+  
+    QrCode::size(500)
+        ->format('png')
+        ->generate('ItSolutionStuff.com', public_path('images/qrcode.png'));
+    
+  return view('qrcode');
+    
+});
 
 require __DIR__ . '/auth.php';

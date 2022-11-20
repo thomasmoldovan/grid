@@ -10,7 +10,8 @@
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.7",
-        "power-components/livewire-powergrid": "^3.2"
+        "power-components/livewire-powergrid": "^3.2",
+        "simplesoftwareio/simple-qrcode": "^4.2"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.7",
