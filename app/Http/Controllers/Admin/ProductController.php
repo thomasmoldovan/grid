@@ -55,7 +55,7 @@ class ProductController extends Controller
         $product->subcategory_id = 1;
         $product->store_id = (int)$request->store;
 
-        $product->product_type = 1;
+        // $product->product_type = 1;
         $product->product_name = $request->name;
         $product->product_description = $request->description;
 
@@ -63,9 +63,9 @@ class ProductController extends Controller
         $product->product_price = number_format($request->price, 2);
         $product->product_old_price = number_format($request->old_price, 2);
 
-        $product->display_discount = $request->display_discount == "on" ? true : false;
-        $product->hot = $request->hot == "on" ? true : false;
-        $product->deal_of_the_day = $request->deal_of_the_day == "on" ? true : false;
+        // $product->display_discount = $request->display_discount == "on" ? true : false;
+        // $product->hot = $request->hot == "on" ? true : false;
+        // $product->deal_of_the_day = $request->deal_of_the_day == "on" ? true : false;
 
         $product->start_date = $request->start_date;
         $product->end_date = $request->end_date;
@@ -126,7 +126,7 @@ class ProductController extends Controller
         $product->subcategory_id = 1;
         $product->store_id = (int)$request->store;
 
-        $product->product_type = 1;
+        // $product->product_type = 1;
         $product->product_name = $request->name;
         $product->product_description = $request->description;
         $product->product_quantity = (int)$request->quantity;
@@ -204,7 +204,7 @@ class ProductController extends Controller
         if (!is_numeric($id)) return;
 
         $store = Store::find($id);
-        $address = $store->store_address;
+        $address = $store->address;
 
         return response()->json(["address" => $address]);
     }

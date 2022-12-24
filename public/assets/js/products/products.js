@@ -1,7 +1,4 @@
 $(document).ready(function () {
-    // var product = JSON.parse(json_encode($product));
-    // console.log(product);
-
     setInputFilter(document.getElementById("quantity"), function(value) {
         return /^\d*$/.test(value); });// Integer >= 0
     setInputFilter(document.getElementById("price"), function(value) {
@@ -16,7 +13,7 @@ $(document).ready(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             type: "POST",
-            url: "/getProductStoreLocation",
+            url: "/admin/getProductStoreLocation",
             data: {
                 "store_id": store_id
             },
@@ -50,5 +47,15 @@ $(document).ready(function () {
                 window.location.reload();
             }
         });
+    });
+
+    flatpickr("#start_date", {
+        enableTime: false,
+        dateFormat: "Y-m-d H:i",
+    });
+
+    flatpickr("#end_date", {
+        enableTime: false,
+        dateFormat: "Y-m-d H:i",
     });
 });

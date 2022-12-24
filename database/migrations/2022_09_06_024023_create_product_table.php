@@ -10,9 +10,9 @@ return new class extends Migration
     {
         Schema::create('product', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->references('id')->on('users');
             $table->foreignId('category_id')->references('id')->on('category');
             $table->foreignId('store_id')->references('id')->on('store');
-            $table->integer("type");
             $table->string("name");
             $table->string("image");
             $table->text("description");

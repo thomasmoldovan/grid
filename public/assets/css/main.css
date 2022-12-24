@@ -3,6 +3,18 @@ body {
     background: #f1f1f1;
 }
 
+.form-control {
+    font-size: 0.8rem;
+}
+
+label {
+    font-weight: bold;
+}
+
+td {
+    font-size: 0.9em;
+}
+
 #mainToaster {
     z-index: 9999;
 }

@@ -128,15 +128,4 @@
     </div>
 </section>
 
-<style>
-    label {
-        font-weight: bold;
-    }
-    td {
-        font-size: 0.9em;
-    }
-</style>
-
-<script src="{{ asset('/assets/js/products/products.js') }}"></script>
-
 @endsection

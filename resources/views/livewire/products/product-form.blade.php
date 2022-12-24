@@ -1,5 +1,5 @@
 <div>
-    <form wire:submit.prevent="submit" class="row g-3" enctype="multipart/form-data">
+    <form wire:submit.prevent="submit" id="product-add-form" method="POST" class="row g-3" enctype="multipart/form-data">
         @csrf
         <div class="col-md-4">
             <label for="category" class="form-label">Category <b class="text-danger">*</b></label>
@@ -17,7 +17,7 @@
         <div class="col-md-4">
             <label for="store" class="form-label">Store <b class="text-danger">*</b></label>
             <select wire:model="product.store_id" id="store" name="store" class="form-select" required>
-                <option selected disabled value="">Select a store</option>
+                <option selected value="">Select a store</option>
                 @foreach ($stores as $store)
                     <option value="{{ $store->id }}">{{ $store->name }}</option>
                 @endforeach
@@ -25,8 +25,8 @@
             <div class="invalid-feedback">You must select a store</div>
         </div>
         <div class="col-md-4">
-            <label for="location" class="form-label">Location</label>
-            <input wire:model="product.store.location.name" id="location" name="location" type="text" class="form-control" value="" readonly>
+            <label for="location" class="form-label">Store Address</label>
+            <input wire:model="location" id="location" name="location" type="text" class="form-control" value="" readonly disabled>
             <div class="invalid-feedback">Address field cannot be empty</div>
         </div>
         <div class="col-lg-6">
@@ -40,7 +40,7 @@
             <div class="row pt-3">
                 <div class="col-lg-4">
                     <label for="quantity" class="form-label">Quantity</label>
-                    <input wire:model="product.quantity" id="quantity" name="quantity" class="form-control">
+                    <input wire:model="product.quantity" id="quantity" name="quantity" type="text" class="form-control">
                 </div>
                 <div class="col-lg-4">
                     <label for="price" class="form-label">Price <b class="text-danger">*</b></label>
@@ -86,11 +86,16 @@
             </div>
             <div class="pt-3">
                 <label for="image" class="form-label">Image <b class="text-danger">*</b></label>
-                <input wire:ignore wire:model="product.image" type="file" id="product_image" name="product_image[]" class="form-control" placeholder="Product image" required multiple>
+                <input wire:ignore wire:model="images" type="file" id="product_image" name="product_image[]" class="form-control" placeholder="Product image" required multiple>
+                <div class="invalid-feedback">You must select a image</div>
+                <div class="validation-message">
+                    {{ $errors->first('product.image') }}
+                </div>
             </div>
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-6" wire:ignore>
             <label for="description" class="form-label">Product Description <b class="text-danger">*</b></label>
+            <input type="hidden" id="description" wire:model="description">
             <textarea wire:model="product.description" id="description" name="description" class="tinymce-editor">
                 <p>Product description</p>
             </textarea>
@@ -102,4 +107,16 @@
             </div>
         </div>
     </form>
+
+    <script src="{{ asset('/assets/js/products/products.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            tinyMCE.get()[0].on("keyup", function() {
+                // debugger;
+                Livewire.emit("updateProductDescription", tinyMCE.get()[0].getContent());
+                // $("#echotext").val(tinyMCE.get()[0].getContent());
+                // window.livewire.set('product.description', tinyMCE.get()[0].getContent());
+            });
+        });
+    </script>
 </div>

@@ -4,8 +4,10 @@ namespace App\Http\Livewire\Products;
 
 use App\Http\Livewire\WithToaster;
 use App\Models\Category;
+use App\Models\Location;
 use App\Models\Store;
 use App\Models\Product as ProductModel;
+use Illuminate\Http\Request;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -19,21 +21,24 @@ class ProductComponent extends Component
     public $categories;
     public $stores;
     public $location;
+    public $images;
+    public $description;
+
+    protected $listeners = [
+        'updateProductDescription'
+   ];
 
     public function mount(ProductModel $product) {
-        // $this->product = $product;
-
-        $this->product = ProductModel::find(3);
-
+        $this->product = $product;
         $this->categories = Category::all();
         $this->stores = Store::all();
         $this->location = "";
+        $this->description = "";
     }
 
     public function edit(ProductModel $product)
     {
         $this->product = $product;
-        // $this->edit = true;
 
         return;
     }
@@ -43,20 +48,35 @@ class ProductComponent extends Component
         return view('livewire.products.product-form');
     }
 
-    public function updateProductLocation() {
-        debug($this->product);
-    }
-
-    public function submit() 
+    public function submit(Request $request) 
     {
         $this->validate();
+
+        if (!empty($request->image)) {
+            $validate = $request->validate([
+                "image" => "mimes:jpg,png"
+            ],
+            [
+                "image.mimes" => "Invalid image type"
+            ]);
+
+            $last_images = $this->extract_images_from_request($request);
+            $this->product->image = $last_images[0];
+        }
+
+        $this->product->user_id = $request->user()->id;
         $this->product->save();
-        // Image validation
-        // if (!$this->image) {
-        //     $this->validate([
-        //         "product.image" => ["required", 'image', "mimes:jpg,jpeg,png"]
-        //     ]);
-        // }
+
+        return;
+    }
+
+    public function updatedProductStoreId() {
+        $store = Store::find($this->product->store_id);
+        $this->location = $store->address;
+    }
+
+    public function updateProductDescription($description) {
+        $this->product->description = $description;
     }
 
     public function rules() {
@@ -73,7 +93,6 @@ class ProductComponent extends Component
             ],
             "product.name" => [
                 "required",
-                "unique:product,name,".$this->product->id.",id",
                 "min:3",
                 "max:125"
             ],
@@ -88,7 +107,7 @@ class ProductComponent extends Component
                 "required",
                 "min:1"
             ],
-            "product.price_old" => [
+            "product.old_price" => [
                 "nullable",
                 "min:1"
             ],
@@ -104,10 +123,13 @@ class ProductComponent extends Component
                 "required",
                 "boolean"
             ],
-            "product.image" => [
-                "required", 
-                "image", 
-                "mimes:jpg,jpeg,png"]
+            "product.start_date" => [
+                "required",
+                "date"
+            ],
+            "product.end_date" => [
+                "date"
+            ]
         ];
     }
 }
